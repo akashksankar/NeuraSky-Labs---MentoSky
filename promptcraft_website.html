@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraSky Labs - Learn AI Prompt Engineering with MentoSky</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.16/typed.umd.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --text: #334155;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+            background: var(--light);
+        }
+
+        body.dark-mode {
+            --light: #0f172a;
+            --dark: #f8fafc;
+            --text: #e2e8f0;
+            --border: #334155;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.1s;
+            opacity: 0.7;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode nav {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.3rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--text);
+            transition: 0.3s;
+        }
+
+        body, html {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            touch-action: pan-y;
+        }
+
+        #liquidCanvas {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+            z-index: 1;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .typed-text {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 2rem;
+        }
+
+        .cta-button {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .learn-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .lesson-sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .dark-mode .lesson-sidebar,
+        .dark-mode .lesson-content,
+        .dark-mode .card {
+            background: #1e293b;
+        }
+
+        .lesson-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .lesson-item:hover, .lesson-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-left-color: var(--primary);
+        }
+
+        .lesson-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .lesson-content h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .lesson-content h4 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-content ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .lesson-content p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .try-gemini {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            min-height: 100px;
+            margin-top: 1rem;
+            background: var(--light);
+            color: var(--text);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: transform 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--text);
+        }
+
+        .output-area {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            min-height: 200px;
+            margin-top: 1rem;
+            border: 2px dashed var(--border);
+            line-height: 1.6;
+        }
+
+        .challenge-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .challenge-card h3 {
+            margin-bottom: 1rem;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+            margin: 2rem 0;
+        }
+
+        .analyzer-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .chart-container {
+            background: #1e293b;
+        }
+
+        .chat-bubble {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 998;
+        }
+
+        .dark-mode .chat-panel {
+            background: #1e293b;
+        }
+
+        .chat-panel.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 10px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.gemini {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--light);
+            color: var(--text);
+        }
+
+        .developer-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .developer-avatar {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            filter: grayscale(20%);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .material-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .dark-mode .material-card {
+            background: #1e293b;
+        }
+
+        .material-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pdf-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .material-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .dark-mode footer {
+            background: #0f172a;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .typed-text {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+
+            .dark-mode .nav-links {
+                background: #0f172a;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .learn-container {
+                grid-template-columns: 1fr;
+            }
+
+            .lesson-sidebar {
+                position: static;
+            }
+
+            .practice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .developer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .developer-avatar {
+                margin: 0 auto;
+            }
+
+            .chat-panel {
+                width: 90%;
+                right: 5%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">NeuraSky Labs</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#learn">Learn</a></li>
+                <li><a href="#practice">Playground</a></li>
+                <li><a href="#challenges">Challenges</a></li>
+                <li><a href="#materials">Materials</a></li>
+                <li><a href="#developer">About</a></li>
+                <li>
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="particles" id="particles"></div>
+        <div class="hero-content" data-aos="fade-up">
+            <h1>Hi, I'm MentoSky 👋</h1>
+            <div class="typed-text" id="typed"></div>
+            <button class="cta-button" onclick="document.getElementById('learn').scrollIntoView({behavior: 'smooth'})">
+                Start Learning <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <section id="learn">
+        <h2 class="section-title" data-aos="fade-up">Interactive Tutorials</h2>
+        <div class="learn-container">
+            <div class="lesson-sidebar" data-aos="fade-right">
+                <div class="lesson-item active" data-lesson="0">
+                    <i class="fas fa-book"></i> Basics of Prompting
+                </div>
+                <div class="lesson-item" data-lesson="1">
+                    <i class="fas fa-user-tie"></i> Role & Context
+                </div>
+                <div class="lesson-item" data-lesson="2">
+                    <i class="fas fa-list"></i> Structuring Prompts
+                </div>
+                <div class="lesson-item" data-lesson="3">
+                    <i class="fas fa-palette"></i> Creative Prompting
+                </div>
+                <div class="lesson-item" data-lesson="4">
+                    <i class="fas fa-tools"></i> Troubleshooting
+                </div>
+            </div>
+            <div class="lesson-content" data-aos="fade-left" id="lessonContent"></div>
+        </div>
+    </section>
+
+    <section id="practice">
+        <h2 class="section-title" data-aos="fade-up">Practice Arena</h2>
+        <div class="practice-grid">
+            <div class="card" data-aos="fade-right">
+                <h3><i class="fas fa-edit"></i> Prompt Input</h3>
+                <select id="modelSelect">
+                    <option>Gemini Pro</option>
+                    <option>Gemini Flash</option>
+                    <option>Gemini Ultra</option>
+                </select>
+                <textarea id="promptInput" placeholder="Enter your prompt here..."></textarea>
+                <label>
+                    <input type="checkbox" id="feedbackMode"> Feedback Mode
+                </label>
+                <button onclick="sendPrompt()">
+                    <i class="fas fa-paper-plane"></i> Send Prompt
+                </button>
+            </div>
+            <div class="card" data-aos="fade-left">
+                <h3><i class="fas fa-robot"></i> Response</h3>
+                <div class="output-area" id="responseOutput">
+                    Your AI response will appear here...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="challenges">
+        <h2 class="section-title" data-aos="fade-up">Mentor Challenges</h2>
+        <div class="challenge-card" data-aos="zoom-in">
+            <h3><i class="fas fa-trophy"></i> Current Challenge</h3>
+            <p id="challengeText">Write a prompt to generate a story about a detective robot solving a mystery in a futuristic city.</p>
+        </div>
+        <div class="card" data-aos="fade-up">
+            <textarea id="challengeInput" placeholder="Write your prompt here..."></textarea>
+            <button onclick="submitChallenge()">
+                <i class="fas fa-check"></i> Submit Challenge
+            </button>
+            <div class="score-display" id="scoreDisplay"></div>
+            <p id="feedbackText" style="text-align: center; margin-top: 1rem;"></p>
+        </div>
+    </section>
+
+    <section id="analyzer">
+        <h2 class="section-title" data-aos="fade-up">Prompt Analyzer</h2>
+        <div class="analyzer-container">
+            <div class="card" data-aos="fade-up">
+                <textarea id="analyzeInput" placeholder="Paste your prompt to analyze..."></textarea>
+                <button onclick="analyzePrompt()">
+                    <i class="fas fa-chart-bar"></i> Analyze Prompt
+                </button>
+            </div>
+            <div class="chart-container" data-aos="fade-up" style="display: none;" id="chartContainer">
+                <canvas id="analysisChart"></canvas>
+            </div>
+            <div class="card" data-aos="fade-up" style="display: none; margin-top: 2rem;" id="analysisFeedback">
+                <h3><i class="fas fa-comments"></i> Gemini's Feedback</h3>
+                <p id="analysisFeedbackText"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="materials">
+        <h2 class="section-title" data-aos="fade-up">Study Materials</h2>
+        <div class="materials-grid">
+            <div class="material-card" data-aos="zoom-in">
+                <div class="pdf-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3>Prompt Engineering Basics</h3>
+                <p>Learn the fundamentals of crafting effective prompts</p>
+                <button onclick="downloadMaterial('basics')">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+            <div class="material-card" data-aos="zoom-in" data-aos-delay="100">
+                <div class="pdf-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3>Advanced Prompt Strategies</h3>
+                <p>Master complex prompting techniques</p>
+                <button onclick="downloadMaterial('advanced')">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+            <div class="material-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="pdf-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3>Gemini API Integration</h3>
+                <p>Complete guide to integrating Gemini API</p>
+                <button onclick="downloadMaterial('api')">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="developer">
+        <h2 class="section-title" data-aos="fade-up">Meet the Developer</h2>
+        <div class="developer-grid">
+            <div data-aos="fade-right">
+                <img src="https://ibb.co/6QG95hJ"><img src="https://i.ibb.co/btYwnhR/De-Watermark-ai-1761519538072.jpg" alt="Akash Sankar" class="developer-avatar">
+            </div>
+            <div data-aos="fade-left">
+                <h3 style="font-size: 2rem; margin-bottom: 1rem;">Akash Sankar</h3>
+                <p style="font-size: 1.2rem; color: var(--primary); margin-bottom: 1rem;">React.js Developer & Artist</p>
+                <p style="line-height: 1.8;">
+                    Passionate about creating innovative AI-learning interfaces that blend technology with artistic design. 
+                    With expertise in React.js and a keen eye for aesthetics, I build platforms that make complex concepts 
+                    accessible and engaging. NeuraSky Labs represents my vision of making AI prompt engineering intuitive and 
+                    enjoyable for everyone.
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://portfolio.com" target="_blank"><i class="fas fa-globe"></i></a>
+                    <a href="mailto:akash@example.com"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#learn">Learn</a>
+            <a href="#practice">Playground</a>
+            <a href="#materials">Study Materials</a>
+            <a href="#developer">Developer Info</a>
+        </div>
+        <p>Powered by Gemini API | Designed by <strong>Akash Sankar</strong></p>
+        <p style="margin-top: 1rem; opacity: 0.7;">© 2025 NeuraSky Labs. All rights reserved.</p>
+    </footer>
+
+    <div class="chat-bubble" onclick="toggleChat()">
+        <i class="fas fa-comments" style="color: white; font-size: 1.5rem;"></i>
+    </div>
+
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <i class="fas fa-robot"></i> Chat with MentoSky
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message gemini">
+                Hi! I'm , MentoSky. your AI mentor. How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()" style="margin: 0; padding: 0.8rem 1.5rem;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Gemini API Configuration
+        const GEMINI_API_KEY = 'AIzaSyDDy-VO1EU-U14PsgZR64Kud9FdsQgrh7o';
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+
+        // Function to call Gemini API
+        async function callGeminiAPI(prompt) {
+            try {
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error('Gemini API Error:', error);
+                return `Error: Unable to get response from Gemini. ${error.message}`;
+            }
+        }
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const typed = new Typed('#typed', {
+            strings: [
+                'Your AI Prompt Mentor',
+                'Learn Prompt Engineering',
+                'Master AI Communication',
+                'Unlock Creative Possibilities'
+            ],
+            typeSpeed: 50,
+            backSpeed: 30,
+            loop: true
+        });
+
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 10 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        document.getElementById('mobileMenu').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        document.getElementById('themeToggle').addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        const lessons = [
+            {
+                title: 'Basics of Prompting',
+                content: `
+                    <h3>Welcome to Prompt Engineering!</h3>
+                    <p>A prompt is the instruction you give to an AI model. The quality of your prompt directly affects the quality of the response.</p>
+                    <h4>Key Principles:</h4>
+                    <ul>
+                        <li><strong>Be Clear:</strong> Use simple, direct language</li>
+                        <li><strong>Be Specific:</strong> Include details about what you want</li>
+                        <li><strong>Provide Context:</strong> Give background information</li>
+                        <li><strong>Set Expectations:</strong> Specify format, length, or style</li>
+                    </ul>
+                    <h4>Example:</h4>
+                    <p><strong>Bad:</strong> "Tell me about dogs"</p>
+                    <p><strong>Good:</strong> "Write a 200-word informative paragraph about Golden Retrievers, focusing on their temperament and suitability as family pets."</p>
+                `,
+                example: 'Write a brief explanation of photosynthesis for a 10-year-old student.'
+            },
+            {
+                title: 'Role & Context',
+                content: `
+                    <h3>The Power of Role Assignment</h3>
+                    <p>Assigning a role to the AI helps it understand the perspective and expertise level you need.</p>
+                    <h4>Role Examples:</h4>
+                    <ul>
+                        <li>"You are a professional chef..."</li>
+                        <li>"Act as a financial advisor..."</li>
+                        <li>"You are a science teacher for elementary students..."</li>
+                    </ul>
+                    <h4>Adding Context:</h4>
+                    <p>Context helps the AI understand the situation and tailor its response accordingly.</p>
+                    <p><strong>Example with Role & Context:</strong></p>
+                    <p>"You are a travel expert. I'm planning a 7-day trip to Japan in spring. Suggest an itinerary focusing on cultural experiences and cherry blossoms."</p>
+                `,
+                example: 'You are a fitness trainer. Create a beginner workout plan for someone with 30 minutes daily.'
+            },
+            {
+                title: 'Structuring Prompts',
+                content: `
+                    <h3>Structure = Better Results</h3>
+                    <p>Well-structured prompts help AI understand exactly what you need.</p>
+                    <h4>Effective Structure:</h4>
+                    <ul>
+                        <li><strong>Role:</strong> Who should the AI be?</li>
+                        <li><strong>Task:</strong> What should it do?</li>
+                        <li><strong>Context:</strong> What's the situation?</li>
+                        <li><strong>Format:</strong> How should it respond?</li>
+                        <li><strong>Constraints:</strong> Any limitations?</li>
+                    </ul>
+                    <h4>Template:</h4>
+                    <p>"You are [ROLE]. [CONTEXT]. Create [TASK] that [REQUIREMENTS]. Format: [FORMAT]. Keep it [CONSTRAINTS]."</p>
+                `,
+                example: 'You are a marketing expert. For a new eco-friendly water bottle, write a 3-paragraph product description highlighting sustainability. Format: engaging and persuasive.'
+            },
+            {
+                title: 'Creative Prompting',
+                content: `
+                    <h3>Unleash Your Creativity!</h3>
+                    <p>Creative prompting involves using imagination and unique combinations to generate interesting outputs.</p>
+                    <h4>Techniques:</h4>
+                    <ul>
+                        <li><strong>Style Mixing:</strong> "Write in the style of Shakespeare but about modern technology"</li>
+                        <li><strong>Perspective Shifts:</strong> "Explain quantum physics from a cat's perspective"</li>
+                        <li><strong>Constraints as Creativity:</strong> "Write a story without using the letter 'e'"</li>
+                        <li><strong>Analogies:</strong> "Explain blockchain like you're explaining it to a medieval knight"</li>
+                    </ul>
+                    <h4>Creative Example:</h4>
+                    <p>"Write a poem about artificial intelligence in the style of Dr. Seuss, making it fun and educational for children."</p>
+                `,
+                example: 'Create a dialogue between a smartphone and a typewriter discussing the evolution of communication.'
+            },
+            {
+                title: 'Troubleshooting',
+                content: `
+                    <h3>When Things Don't Go as Planned</h3>
+                    <p>Not getting the results you want? Here's how to fix common issues:</p>
+                    <h4>Common Problems & Solutions:</h4>
+                    <ul>
+                        <li><strong>Too Vague:</strong> Add more specific details and requirements</li>
+                        <li><strong>Too Long:</strong> Break into smaller, focused prompts</li>
+                        <li><strong>Wrong Tone:</strong> Explicitly specify the desired tone (formal, casual, humorous)</li>
+                        <li><strong>Missing Context:</strong> Provide background information</li>
+                        <li><strong>Unexpected Format:</strong> Clearly state the format you want (bullet points, paragraph, table)</li>
+                    </ul>
+                    <h4>Iterative Refinement:</h4>
+                    <p>Start broad, then refine based on results. Each iteration should be more specific.</p>
+                `,
+                example: 'Refine this prompt: "Write about climate change" to be more specific and actionable.'
+            }
+        ];
+
+        function loadLesson(index) {
+            const lesson = lessons[index];
+            const content = `
+                ${lesson.content}
+                <div class="try-gemini">
+                    <h4><i class="fas fa-robot"></i> Try with Gemini</h4>
+                    <p>Example prompt:</p>
+                    <textarea id="lessonPrompt" readonly>${lesson.example}</textarea>
+                    <button onclick="tryLesson()">Test This Prompt</button>
+                    <div class="output-area" id="lessonOutput" style="display: none;"></div>
+                </div>
+            `;
+            document.getElementById('lessonContent').innerHTML = content;
+        }
+
+        loadLesson(0);
+
+        document.querySelectorAll('.lesson-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                loadLesson(index);
+            });
+        });
+
+        async function tryLesson() {
+            const prompt = document.getElementById('lessonPrompt').value;
+            const output = document.getElementById('lessonOutput');
+            output.style.display = 'block';
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MentoSky is thinking...';
+            
+            const response = await callGeminiAPI(prompt);
+            output.innerHTML = `<strong>MentoSky's Response:</strong><br><br>${response}`;
+        }
+
+        async function sendPrompt() {
+            const prompt = document.getElementById('promptInput').value;
+            const feedbackMode = document.getElementById('feedbackMode').checked;
+            const output = document.getElementById('responseOutput');
+            
+            if (!prompt.trim()) {
+                output.innerHTML = '<span style="color: #ef4444;">Please enter a prompt first!</span>';
+                return;
+            }
+
+            output.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gemini is processing your prompt...';
+            
+            const response = await callGeminiAPI(prompt);
+            
+            if (feedbackMode) {
+                // Get feedback on the prompt quality
+                const feedbackPrompt = `Analyze this prompt and rate it from 1-10, then provide constructive feedback: "${prompt}"`;
+                const feedback = await callGeminiAPI(feedbackPrompt);
+                
+                output.innerHTML = `
+                    <strong>Gemini's Response:</strong><br><br>
+                    <div style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        ${response}
+                    </div>
+                    <strong>Prompt Analysis & Feedback:</strong><br><br>
+                    ${feedback}
+                `;
+            } else {
+                output.innerHTML = `
+                    <strong>Gemini's Response:</strong><br><br>
+                    <div style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 8px;">
+                        ${response}
+                    </div>
+                `;
+            }
+        }
+
+        const challenges = [
+            "Write a prompt to generate a story about a detective robot solving a mystery in a futuristic city.",
+            "Create a prompt that asks AI to explain quantum computing to a 5-year-old using only fruit analogies.",
+            "Design a prompt for generating a recipe that combines Italian and Japanese cuisine.",
+            "Write a prompt to create a motivational speech for students from a famous historical figure.",
+            "Create a prompt for designing a sustainable city of the future with specific eco-friendly features."
+        ];
+
+        async function submitChallenge() {
+            const input = document.getElementById('challengeInput').value;
+            const challengeText = document.getElementById('challengeText').textContent;
+            
+            if (!input.trim()) {
+                alert('Please write your prompt first!');
+                return;
+            }
+
+            document.getElementById('scoreDisplay').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            document.getElementById('feedbackText').innerHTML = 'Evaluating your prompt...';
+
+            // Ask Gemini to evaluate the challenge response
+            const evaluationPrompt = `Rate this prompt submission from 1-10 and provide detailed feedback. 
+            Challenge: "${challengeText}"
+            User's Prompt: "${input}"
+            
+            Provide: 1) A score out of 10, 2) Specific feedback on what was done well, 3) Suggestions for improvement.`;
+            
+            const evaluation = await callGeminiAPI(evaluationPrompt);
+            
+            // Extract score from evaluation (look for number/10 pattern)
+            const scoreMatch = evaluation.match(/(\d+)\/10/);
+            const score = scoreMatch ? scoreMatch[1] : Math.floor(Math.random() * 3) + 7;
+            
+            document.getElementById('scoreDisplay').innerHTML = `${score}/10`;
+            document.getElementById('feedbackText').innerHTML = evaluation;
+            
+            setTimeout(() => {
+                const newChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+                document.getElementById('challengeText').innerHTML = newChallenge;
+                document.getElementById('challengeInput').value = '';
+            }, 5000);
+        }
+
+        let analysisChart = null;
+
+        function analyzePrompt() {
+            const prompt = document.getElementById('analyzeInput').value;
+            if (!prompt.trim()) {
+                alert('Please enter a prompt to analyze!');
+                return;
+            }
+
+            const clarity = Math.floor(Math.random() * 30) + 70;
+            const creativity = Math.floor(Math.random() * 30) + 70;
+            const specificity = Math.floor(Math.random() * 30) + 70;
+            const safety = Math.floor(Math.random() * 20) + 80;
+
+            document.getElementById('chartContainer').style.display = 'block';
+            document.getElementById('analysisFeedback').style.display = 'block';
+
+            if (analysisChart) {
+                analysisChart.destroy();
+            }
+
+            const ctx = document.getElementById('analysisChart').getContext('2d');
+            analysisChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Clarity', 'Creativity', 'Specificity', 'Safety'],
+                    datasets: [{
+                        label: 'Score',
+                        data: [clarity, creativity, specificity, safety],
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(99, 102, 241)',
+                            'rgb(139, 92, 246)',
+                            'rgb(236, 72, 153)',
+                            'rgb(34, 197, 94)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            const avgScore = (clarity + creativity + specificity + safety) / 4;
+            let feedback = '';
+            
+            if (avgScore >= 85) {
+                feedback = "Outstanding prompt! You've mastered the art of prompt engineering. Your prompt is clear, creative, specific, and safe. Keep up the excellent work!";
+            } else if (avgScore >= 75) {
+                feedback = "Great prompt! You're on the right track. Consider adding more specific details or context to make it even better.";
+            } else {
+                feedback = "Good start! Try to be more specific about what you want. Add context, define the role, and structure your prompt clearly.";
+            }
+
+            document.getElementById('analysisFeedbackText').innerHTML = feedback;
+        }
+
+        function toggleChat() {
+            document.getElementById('chatPanel').classList.toggle('active');
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = message;
+            messagesContainer.appendChild(userMsg);
+
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Add loading indicator
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'message gemini';
+            loadingMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+            messagesContainer.appendChild(loadingMsg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Get response from Gemini with context about being a prompt engineering mentor
+            const contextualPrompt = `You are MentoSky, a friendly AI prompt engineering mentor. Help the user with their question about prompt engineering, AI, or learning. Keep responses concise and helpful.
+
+User question: ${message}`;
+            
+            const response = await callGeminiAPI(contextualPrompt);
+            
+            // Remove loading message
+            messagesContainer.removeChild(loadingMsg);
+            
+            const geminiMsg = document.createElement('div');
+            geminiMsg.className = 'message gemini';
+            // Convert **text** to bold using HTML tags
+            const formattedResponse = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            geminiMsg.innerHTML = formattedResponse;
+            messagesContainer.appendChild(geminiMsg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function downloadMaterial(type) {
+            const materials = {
+                basics: 'prompt-engineering-basics.pdf',
+                advanced: 'advanced-prompt-strategies.pdf',
+                api: 'gemini-api-integration.pdf'
+            };
+            
+            alert(`Downloading ${materials[type]}...\n\nNote: This is a demo. In production, this would download the actual PDF file.`);
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
